@@ -14,21 +14,21 @@ using vvvvd = std::vector<vvvd>;
 const int OUTPUT_TERMINAL = 1;
 const int DEBUG_f = 0;
 // 初期条件 -> 0:長方形, 1:sinx 
-const int INITIAL = 0;
+const int INITIAL = 1;
 // mesh -> 0:linear, 1:log
 const int LOGMESH = 1;
 /*****************************************************/
 
 /******************計算条件********************/
-const double Lmax = 1.0;
-const double Lmin = 1e-3;
+const double Lmax = 10.0;
+const double Lmin = 1e-1;
 const double Lr = 1.0;
-const int NR = 1000 + 1;
+const int NR = 100 + 1;
 const double dr = Lmax/(NR-1);
 const double kappa = 1.0;
 const double OMEGA = 1.8;
 const double dt = 0.001;
-const double TMAX = 0.5 + 1e-9;
+const double TMAX = 1.0 + 1e-9;
 const double EPS = 1e-10;
 
 vd r(NR),rp(NR),rm(NR);
@@ -42,7 +42,7 @@ TIME に配列 (DT, 2DT, ..., ENDTIME) をsetする
 */
 const double T_EPS = 1.0e-10;
 const double DT = 0.01;
-const double ENDTIME = 0.5;
+const double ENDTIME = 1.0;
 vd TIME;
 //出力時刻を set する関数
 void TIME_set();
@@ -165,8 +165,9 @@ void grid_set(){
       rm[i] = rp[i-1];
     }
     rm[0] = 0.0;
-    // 0 除算を避けるための処方箋
-    r[0] = 1e-10;
+
+    // 初期条件設定時の 0 除算を避けるための処方箋
+    r[0] = 1e-20;
   }
 }
 

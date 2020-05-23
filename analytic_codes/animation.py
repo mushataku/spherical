@@ -14,7 +14,7 @@ GIF = 0
 MP4 = 1
 PLT = 0
 
-TEST = 1
+TEST = 0
 ###########################
 
 #--------------def-------------
@@ -63,7 +63,7 @@ def init_f(ax):
   # ax.set_yscale("log")
   r,f = get_f(0)
   if TEST == 0:
-    im_f, = ax.plot(r,f, "r", label="numeric")
+    im_f, = ax.plot(r,f, "ro", label="numeric")
     ax.legend(fontsize=20)
     return im_f
   else:
@@ -104,7 +104,7 @@ if TEST == 0:
   im_f = init_f(ax_f)
 else:
   im_f, im_f_analytic = init_f(ax_f)
-time_text.set_text("time = 0.000\n"+r"$\int$fdr = %.3f"%F[0])
+time_text.set_text("time = 0.000\n"+r"$\iiint$fdV = %.3f"%F[0])
 
 #### 画像更新用関数
 def animate(frame):
@@ -115,7 +115,7 @@ def animate(frame):
   if(TEST):
     reset_f_analytic(im_f_analytic, frame)
   
-  time_text.set_text("time = %.3f\n"%T[frame]+r"$\int$fdr = %.3f"%F[frame])
+  time_text.set_text("time = %.3f\n"%T[frame]+r"$\iiint$fdV = %.3f"%F[frame])
 
 ani = FuncAnimation(fig, animate, frames=int(len(T))
               , interval=200, repeat=True, blit=False)
