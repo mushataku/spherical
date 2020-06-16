@@ -16,7 +16,7 @@ const int DEBUG_f = 0;
 // 初期条件 -> 0:長方形, 1:sinx 
 const int INITIAL = 1;
 // mesh -> 0:linear, 1:log
-const int LOGMESH = 1;
+const int LOGMESH = 0;
 /*****************************************************/
 
 /******************計算条件********************/
@@ -79,6 +79,11 @@ int main(){
   double t = 0.0;
   TIME_set();
   grid_set();
+  // for(int i = 0; i < NR; i++){
+  //   if(i < NR-1) printf("%f ", r[i]);
+  //   else printf("%f\n", r[i]);
+  // }
+  // return 0;
   init(f);
   fprintf(time_fp, "time\n");
   fprintf(conservation_fp, "time,F\n");
