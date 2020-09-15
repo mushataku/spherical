@@ -13,26 +13,31 @@ using vvvvd = std::vector<vvvd>;
 // terminal に出力して時間確認 
 const int OUTPUT_TERMINAL = 1;
 const int DEBUG_f = 0;
-// 初期条件 -> 0:長方形, 1:sinx 
-const int INITIAL = 1;
+// 初期条件 -> 0:長方形, 1:sinx ,2:0
+const int INITIAL = 2;
 // mesh -> 0:linear, 1:log
 const int LOGMESH = 0;
+// ソース項 0:なし, 1:デルタ関数(体積で割る) 2:デルタ関数（面積で割る
+// -> 1 の時のみ計算結果がメッシュサイズに依らないことを確認
+const int SOURCE = 2;
 /*****************************************************/
 
 /******************計算条件********************/
-const double Lmax = 10.0;
+const double Lmax = 1.0;
 const double Lmin = 1e-1;
 const double Lr = 1.0;
 const int NR = 100 + 1;
 const double dr = Lmax/(NR-1);
 const double kappa = 1.0;
 const double OMEGA = 1.8;
-const double dt = 0.001;
-const double TMAX = 1.0 + 1e-9;
+const double dt = 0.01;
+const double TMAX = 2.0 + 1e-9;
 const double EPS = 1e-10;
 
 vd r(NR),rp(NR),rm(NR);
+vd Source(NR);
 void grid_set();
+void Source_set();
 
 /*********************************************/
 /*
@@ -42,7 +47,7 @@ TIME に配列 (DT, 2DT, ..., ENDTIME) をsetする
 */
 const double T_EPS = 1.0e-10;
 const double DT = 0.01;
-const double ENDTIME = 1.0;
+const double ENDTIME = 10.0;
 vd TIME;
 //出力時刻を set する関数
 void TIME_set();
@@ -79,6 +84,7 @@ int main(){
   double t = 0.0;
   TIME_set();
   grid_set();
+  Source_set();
   // for(int i = 0; i < NR; i++){
   //   if(i < NR-1) printf("%f ", r[i]);
   //   else printf("%f\n", r[i]);
@@ -131,6 +137,12 @@ void init(vd &f){
   if(INITIAL == 1){
     for(int i = 0; i < NR; i++) {
       f[i] = (Lr/M_PI)*std::sin(M_PI*r[i]/Lr)/r[i];
+    }
+  }
+
+  if(INITIAL == 2){
+    for(int i = 0; i < NR; i++) {
+      f[i] = 0;
     }
   }
   // boundary(f);
@@ -206,7 +218,7 @@ int diffusion(vd &f){
   int imax = 99999;
   double df;
   for(int i = 0; i < NR-1; i++) {
-    a[i] = f[i];
+    a[i] = f[i] + dt*Source[i];
   }
   // nf を求める
   for(int icnt = 0; icnt < imax; icnt++) {
@@ -254,4 +266,32 @@ void conservation(double t, vd &f){
   }
   if(OUTPUT_TERMINAL) printf("conservation:%e\n", sum);
   fprintf(conservation_fp, "%e,%e\n",t,sum);
+}
+
+void Source_set(){
+  if(SOURCE == 0){
+    for(int ir = 0; ir < NR; ir++) {
+      Source[ir] = 0;
+    }
+  }
+
+  if(SOURCE == 1){
+    for(int ir = 0; ir < NR; ir++) {
+      if(ir == 0){ 
+        double dV = 4.0*M_PI/3.0*(rp[0]*rp[0]*rp[0]-rm[0]*rm[0]*rm[0]);
+        Source[ir] = 1.0/dV;
+      }
+      else Source[ir] = 0;
+    }
+  }
+
+  if(SOURCE == 2){
+    for(int ir = 0; ir < NR; ir++) {
+      if(ir == 0){ 
+        double dS = 4.0*M_PI*(rp[0]*rp[0]-rm[0]*rm[0]);
+        Source[ir] = 1.0/dS;
+      }
+      else Source[ir] = 0;
+    }
+  }
 }

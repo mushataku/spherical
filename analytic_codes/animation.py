@@ -15,6 +15,10 @@ MP4 = 1
 PLT = 0
 
 TEST = 0
+
+YMIN = 0
+# YMAX = 0
+YMAX = 10
 ###########################
 
 #--------------def-------------
@@ -61,6 +65,8 @@ def init_f(ax):
   ax.yaxis.set_tick_params(direction='in')
   ax.tick_params(labelsize=21)
   # ax.set_yscale("log")
+  if(YMAX != 0):
+    ax.set_ylim(YMIN,YMAX)
   r,f = get_f(0)
   if TEST == 0:
     im_f, = ax.plot(r,f, "ro", label="numeric")
