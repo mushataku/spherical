@@ -19,7 +19,7 @@ const int INITIAL = 2;
 const int LOGMESH = 0;
 // ソース項 0:なし, 1:デルタ関数(体積で割る) 2:デルタ関数（面積で割る
 // -> 1 の時のみ計算結果がメッシュサイズに依らないことを確認
-const int SOURCE = 2;
+const int SOURCE = 1;
 /*****************************************************/
 
 /******************計算条件********************/
@@ -202,7 +202,7 @@ void output(double t, vd &f){
       if(i < NR-1) printf("i:%d r:%e f:%f ", i, r[i], f[i]);
       else printf("i:%d r:%e f:%f\n", i, r[i], f[i]);
     }
-    fprintf(fp, "%e,%e\n", r[i], f[i]);
+    fprintf(fp, "%e,%e\n", r[i], 4.0*M_PI*r[i]*r[i]*f[i]);
   }
   fclose(fp);
 }

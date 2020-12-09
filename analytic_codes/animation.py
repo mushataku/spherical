@@ -11,14 +11,14 @@ import os
 ##########CONFIG###########
 # 動画の保存形式を選択
 GIF = 0
-MP4 = 1
-PLT = 0
+MP4 = 0
+PLT = 1
 
 TEST = 0
 
 YMIN = 0
 # YMAX = 0
-YMAX = 10
+YMAX = 5
 ###########################
 
 #--------------def-------------
@@ -86,6 +86,7 @@ def reset_f(im,frame):
 def reset_f_analytic(im,frame):
   r,_ = get_f(frame)
   im.set_data(r,analytic(T[frame],r))
+  im.set_data(r,analytic(T[frame],r))
 
 #########################描画のための関数#########################
 
@@ -121,7 +122,7 @@ def animate(frame):
   if(TEST):
     reset_f_analytic(im_f_analytic, frame)
   
-  time_text.set_text("time = %.3f\n"%T[frame]+r"$\iiint$fdV = %.3f"%F[frame])
+  time_text.set_text("time = %.3f\n"%T[frame]+r"$\iiint$fdV = %.20f"%F[frame])
 
 ani = FuncAnimation(fig, animate, frames=int(len(T))
               , interval=200, repeat=True, blit=False)
